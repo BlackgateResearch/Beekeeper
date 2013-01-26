@@ -58,7 +58,7 @@ def new_goal():
     # todo: if no beminder auth_code, blitz the session and redirect to /
     if request.method == 'POST':
         payload = {
-            'code': request.args['code'],
+            'code': request.form['slug'],
             'title': request.form['title'],
             'goal_type': request.form['goal_type'],
             'goalval': request.form['goalval'],
