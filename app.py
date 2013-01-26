@@ -50,8 +50,12 @@ def index():
         return '<a href=%s>Authorise Beeminder</a>' % url
 
 
-@app.route('/new_goal/')
+@app.route('/new_goal/', methods=['GET', 'POST'])
 def new_goal():
+
+    if request.method == 'POST':
+        raise
+
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',
