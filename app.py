@@ -6,6 +6,8 @@
 # unlicense.org
 
 import os
+import urllib2
+import urllib
 import json
 import datetime
 import time
@@ -120,14 +122,15 @@ def poll():
                     'comment': "Auto-added by Beekeeper."
                 }
                 beeminder_url = "https://beeminder.com/api/v1/users/%s/goals/%s/datapoints.json" % (session['beeminder_username'], goal['slug'])
-                r = requests.post(
+                req = urllib2.Request(
                     furl(beeminder_url).add({
                         'access_token': session['beeminder_access_token']
                     }).url,
-                    data=payload
+                    urllib.urlencode(payload)
                 )
-                debug.append(r.text)
+                response = urllib2.urlopen(req)
 
+                debug.append(response.read())
 
         else:
             return "type not implimented"
