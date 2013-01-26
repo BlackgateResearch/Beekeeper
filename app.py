@@ -43,7 +43,7 @@ def index():
 
 
 @app.route('/new_goal')
-def runkeeper():
+def new_goal():
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',
