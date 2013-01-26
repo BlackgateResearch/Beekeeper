@@ -37,7 +37,7 @@ def index():
         Here are you existing linked Goals:
         ...
         <a href=%s>Create new linked Goal</a>
-        """ % url_for('runkeeper')
+        """ % url_for('new_goal')
     else:
         args = {
             'client_id': 'caekchatjlsjewirvmeymxzjm',
@@ -49,7 +49,7 @@ def index():
         return '<a href=%s>Authorise Beeminder</a>' % url
 
 
-@app.route('/runkeeper')
+@app.route('/new_goal')
 def runkeeper():
     if request.args.get('code', False):
         payload = {
