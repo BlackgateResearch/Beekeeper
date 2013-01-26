@@ -54,7 +54,7 @@ def index():
 def new_goal():
 
     if request.method == 'POST':
-        raise
+        return request.form['slug']
 
     if request.args.get('code', False):
         payload = {
