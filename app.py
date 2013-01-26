@@ -27,7 +27,7 @@ def index():
         args = {
             'client_id': 'caekchatjlsjewirvmeymxzjm',
             'response_type': 'token',
-            'redirect_uri': beeminder_redirect_uri
+            'redirect_uri': furl(beeminder_redirect_uri).url
         }
 
         url = furl('https://www.beeminder.com/apps/authorize').add(args).url
