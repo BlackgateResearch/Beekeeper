@@ -8,6 +8,7 @@
 import os
 import json
 import datetime
+import time
 
 from flask import Flask, request, session, url_for, redirect, render_template
 from furl import furl
@@ -57,22 +58,16 @@ def index():
 def new_goal():
     # todo: if no beminder auth_code, blitz the session and redirect to /
     if request.method == 'POST':
-        '''payload = {
+        linked_goals = session.get('linked_goals', [])
+        linked_goals.append({
             'slug': request.form['slug'],
-            'title': request.form['title'],
-            'goal_type': request.form['goal_type'],
-            'goalval': request.form['goalval'],
-            'rate': request.form['rate'],
-            'initval': request.form['initval'],
-        }
-        beeminder_url = "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username']
-        r = requests.post(
-            furl(beeminder_url).add({
-                'access_token': session['beeminder_access_token']
-            }).add(payload).url,
-            data={}
-        )'''
-        return "posting new goals to beeminder not implimented"
+            'timestamp': time.time(),
+            'metric': request.form['metric']
+        })
+        session['linked_goals'] = linked_goals
+        return redirect(url_for('index'))
+
+
 
     if request.args.get('code', False):
         payload = {
@@ -85,13 +80,6 @@ def new_goal():
         r = requests.post("https://runkeeper.com/apps/token", data=payload)
         session['runkeeper_access_token'] = json.loads(r.text)['access_token']
 
-    if session.get('runkeeper_access_token', False):
-        client = RunKeeperClient(session['runkeeper_access_token'])
-        weights = client.getWeightMeasurements()['items']
-
-        latest = sorted(
-            weights,
-            key=lambda k: datetime.datetime.strptime(k['timestamp'], "%a, %d %b %Y %H:%M:%S"))[-1]
 
         beeminder_url = "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username']
         goals = requests.get(
@@ -111,6 +99,48 @@ def new_goal():
         url = furl('https://runkeeper.com/apps/authorize').add(args).url
         return '<a href=%s>Authorise</a>' % url
 
+
+@app.route('/poll')
+def poll():
+    linked_goals = session.get('linked_goals', [])
+
+    for goal in linked_goals:
+        if goal['metric'] == 'weight':
+            client = RunKeeperClient(session['runkeeper_access_token'])
+            weights = client.getWeightMeasurements()['items']
+
+            new_weights = filter(
+                lambda w: datetime.datetime.strptime(w['timestamp'],
+                    "%a, %d %b %Y %H:%M:%S") > goal['timestamp'],
+                weights
+            )
+            for weight in new_weights:
+                payload = {
+                    'timestamp': weight['timestamp'],
+                    'value': weight['weight'],
+                    'comment': "Auto-added by Beekeeper."
+                }
+                beeminder_url = "https://beeminder.com/api/v1/users/%s/goals/%s/datapoints.json" % (session['beeminder_username'], goal['slug'])
+                r = requests.post(
+                    furl(beeminder_url).add({
+                        'access_token': session['beeminder_access_token']
+                    }).url,
+                    data=payload
+                )
+
+        else:
+            return "type not implimented"
+
+    '''{
+            'slug': request.form['slug'],
+            'timestamp': time.time(),
+            'metric': request.form['metric']
+        }'''
+
+
+
+
+        return "posting new goals to beeminder not implimented"
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
