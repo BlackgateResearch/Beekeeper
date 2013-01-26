@@ -31,6 +31,7 @@ def index():
     at = request.args.get('access_token', False)
     if at:
         session['beeminder_access_token'] = at
+        session['beeminder_username'] = request.args['username']
 
     if session.get('beeminder_access_token', False):
         return """
@@ -54,8 +55,19 @@ def index():
 def new_goal():
 
     if request.method == 'POST':
-        return request.form['slug']
-
+        payload = {
+            'code': request.args['code'],
+            'title': request.form['title'],
+            'goal_type': request.form['goal_type'],
+            'goalval': request.form['goalval'],
+            'rate': request.form['rate'],
+            'initval': request.form['initval'],
+            'access_token': session['beeminder_access_token']
+        }
+        r = requests.post(
+            "https://beeminder.com/api/users/%s/goals.json" % session['beeminder_username'],
+            data=payload
+        )
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',
