@@ -23,7 +23,6 @@ def index():
     at = request.args.get('access_token', False)
     if at:
         session['beeminder_access_token'] = at
-        return 'beeminder auth OK'
 
     if session.get('beeminder_access_token', False):
         return "already auth'd"
