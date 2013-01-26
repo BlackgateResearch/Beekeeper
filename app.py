@@ -42,7 +42,7 @@ def index():
         return '<a href=%s>Authorise Beeminder</a>' % url
 
 
-@app.route('/new_goal')
+@app.route('/new_goal/')
 def new_goal():
     if request.args.get('code', False):
         payload = {
@@ -53,7 +53,7 @@ def new_goal():
             'redirect_uri': runkeeper_redirect_uri
         }
         r = requests.post("https://runkeeper.com/apps/token", data=payload)
-        return r.json
+        return r.text
     else:
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
