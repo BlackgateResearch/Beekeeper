@@ -23,7 +23,7 @@ def index():
     if request.args.get('code', False):
         return redirect(
             url_for(
-                'runkeeper',
+                'new_goal',
                 code=request.args['code']
                 )
             )
