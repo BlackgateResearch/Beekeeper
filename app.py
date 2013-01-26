@@ -7,17 +7,35 @@
 
 import os
 
-from flask import Flask, request
+from flask import Flask, request, session
 from furl import furl
 import requests
 
 app = Flask(__name__)
 app.debug = True
 redirect_uri = 'http://beekeeper.herokuapp.com/'
+beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/?app=beeminder'
 
 
 @app.route('/')
 def index():
+    at = request.args.get('access_token', False)
+    if at:
+        session['beeminder_access_token'] = at
+        return 'beeminder auth OK'
+    else:
+        args = {
+            'client_id': 'caekchatjlsjewirvmeymxzjm',
+            'response_type': 'token',
+            'redirect_uri': beeminder_redirect_uri
+        }
+
+        url = furl('https://www.beeminder.com/apps/authorize').add(args).url
+        return '<a href=%s>Authorise Beeminder</a>' % url
+
+
+@app.route('/runkeeper')
+def runkeeper():
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',
