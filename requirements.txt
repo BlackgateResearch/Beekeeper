@@ -3,6 +3,7 @@ Jinja2==2.6
 Werkzeug==0.8.3
 argparse==1.2.1
 furl==0.3.3
+healthgraph-api==0.2.2
 ipdb==0.7
 ipython==0.13.1
 orderedmultidict==0.7
