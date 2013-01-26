@@ -24,6 +24,9 @@ def index():
     if at:
         session['beeminder_access_token'] = at
         return 'beeminder auth OK'
+
+    if session.get('beeminder_access_token', False):
+        return "already auth'd"
     else:
         args = {
             'client_id': 'caekchatjlsjewirvmeymxzjm',
