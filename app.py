@@ -98,7 +98,7 @@ def new_goal():
             furl(beeminder_url).add({
                 'access_token': session['beeminder_access_token']
             }).url
-        ).json
+        ).json()
         return render_template('select_goal.html', goals=goals)
 
     else:
