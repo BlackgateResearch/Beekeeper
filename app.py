@@ -53,7 +53,7 @@ def index():
 
 @app.route('/new_goal/', methods=['GET', 'POST'])
 def new_goal():
-
+    # todo: if no beminder auth_code, blitz the session and redirect to /
     if request.method == 'POST':
         payload = {
             'code': request.args['code'],
@@ -65,9 +65,11 @@ def new_goal():
             'access_token': session['beeminder_access_token']
         }
         r = requests.post(
-            "https://beeminder.com/api/users/%s/goals.json" % session['beeminder_username'],
+            "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username'],
             data=payload
         )
+        return "response:" + r.text
+
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',
