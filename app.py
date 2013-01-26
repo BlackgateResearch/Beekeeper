@@ -14,7 +14,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = '1A0Zr92138j/3asdfyX R~XHH!jsdfmN]LWX/,?RT~#'
 app.debug = True
-runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal'
+runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal/'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
@@ -53,7 +53,7 @@ def new_goal():
             'redirect_uri': runkeeper_redirect_uri
         }
         r = requests.post("https://runkeeper.com/apps/token", data=payload)
-        return r.text
+        return r.json
     else:
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
