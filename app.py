@@ -100,6 +100,7 @@ def new_goal():
 
 @app.route('/poll')
 def poll():
+    debug = []
     linked_goals = session.get('linked_goals', [])
 
     for goal in linked_goals:
@@ -125,6 +126,8 @@ def poll():
                     }).url,
                     data=payload
                 )
+                debug.append(r.text)
+
 
         else:
             return "type not implimented"
@@ -134,6 +137,7 @@ def poll():
             'timestamp': time.time(),
             'metric': request.form['metric']
         }'''
+    return "Done. %s" % debug
 
 
 if __name__ == '__main__':
