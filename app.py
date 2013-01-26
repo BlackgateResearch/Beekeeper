@@ -17,7 +17,7 @@ from healthgraph import RunKeeperClient
 app = Flask(__name__)
 app.secret_key = '1A0Zr92138j/3asdfyX R~XHH!jsdfmN]LWX/,?RT~#'
 app.debug = True
-runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal/'
+runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/link_goal/'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
