@@ -7,7 +7,7 @@
 
 import os
 
-from flask import Flask, request, session
+from flask import Flask, request, session, url_for
 from furl import furl
 import requests
 
@@ -25,7 +25,12 @@ def index():
         session['beeminder_access_token'] = at
 
     if session.get('beeminder_access_token', False):
-        return "already auth'd"
+        return """
+        Welcome
+        Here are you existing linked Goals:
+        ...
+        <a href=%s>Create new linked Goal</a>
+        """ % url_for('runkeeper')
     else:
         args = {
             'client_id': 'caekchatjlsjewirvmeymxzjm',
