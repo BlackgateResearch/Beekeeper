@@ -69,8 +69,8 @@ def new_goal():
         r = requests.post(
             furl(beeminder_url).add({
                 'access_token': session['beeminder_access_token']
-            }).url,
-            data=payload
+            }).add(payload).url,
+            data={}
         )
         return "response:" + r.text
 
