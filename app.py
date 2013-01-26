@@ -109,7 +109,7 @@ def poll():
 
             new_weights = filter(
                 lambda w: datetime.datetime.strptime(w['timestamp'],
-                    "%a, %d %b %Y %H:%M:%S") > datetime.date.fromtimestamp(goal['timestamp']),
+                    "%a, %d %b %Y %H:%M:%S") > datetime.datetime.fromtimestamp(goal['timestamp']),
                 weights
             )
             for weight in new_weights:
