@@ -53,7 +53,7 @@ def index():
         return '<a href=%s>Authorise Beeminder</a>' % url
 
 
-@app.route('/new_goal/', methods=['GET', 'POST'])
+@app.route('/link_goal/', methods=['GET', 'POST'])
 def new_goal():
     # todo: if no beminder auth_code, blitz the session and redirect to /
     if request.method == 'POST':
