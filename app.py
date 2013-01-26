@@ -21,9 +21,11 @@ runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal/'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
-class Struct:
-    def __init__(self, **entries):
-        self.__dict__.update(entries)
+@app.route('/logout')
+def logout():
+    """Clear the session"""
+    session.clear()
+    return redirect(url_for('index'))
 
 
 @app.route('/')
