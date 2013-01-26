@@ -64,10 +64,12 @@ def new_goal():
             'goalval': request.form['goalval'],
             'rate': request.form['rate'],
             'initval': request.form['initval'],
-            'access_token': session['beeminder_access_token']
         }
+        beeminder_url = "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username']
         r = requests.post(
-            "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username'],
+            furl(beeminder_url).add({
+                'access_token': session['beeminder_access_token']
+            }).url,
             data=payload
         )
         return "response:" + r.text
