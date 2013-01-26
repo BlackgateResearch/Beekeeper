@@ -14,19 +14,12 @@ import requests
 app = Flask(__name__)
 app.secret_key = '1A0Zr92138j/3asdfyX R~XHH!jsdfmN]LWX/,?RT~#'
 app.debug = True
-redirect_uri = 'http://beekeeper.herokuapp.com/'
+runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
 @app.route('/')
 def index():
-    if request.args.get('code', False):
-        return redirect(
-            url_for(
-                'new_goal',
-                code=request.args['code']
-                )
-            )
     at = request.args.get('access_token', False)
     if at:
         session['beeminder_access_token'] = at
@@ -57,7 +50,7 @@ def runkeeper():
             'code': request.args['code'],
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
             'client_secret': 'af6d9f6a6c684139b5a86fd6ee64ac31',
-            'redirect_uri': redirect_uri
+            'redirect_uri': runkeeper_redirect_uri
         }
         r = requests.post("https://runkeeper.com/apps/token", data=payload)
         return r.text
@@ -65,7 +58,7 @@ def runkeeper():
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
             'response_type': 'code',
-            'redirect_uri': redirect_uri
+            'redirect_uri': runkeeper_redirect_uri
         }
 
         url = furl('https://runkeeper.com/apps/authorize').add(args).url
