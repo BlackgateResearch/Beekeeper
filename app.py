@@ -20,6 +20,11 @@ runkeeper_redirect_uri = 'http://beekeeper.herokuapp.com/new_goal/'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
+class Struct:
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
+
 @app.route('/')
 def index():
     at = request.args.get('access_token', False)
@@ -59,11 +64,24 @@ def new_goal():
 
     if session.get('runkeeper_access_token', False):
         client = RunKeeperClient(session['runkeeper_access_token'])
+        weights = client.getWeightMeasurements()['items']
+
+        latest = sorted(
+            weights,
+            key=lambda k: datetime.datetime.strptime(k['timestamp'], "%a, %d %b %Y %H:%M:%S"))[-1]
+
         return """
         Welcome
-        Here are you existing weights:
-        %s
-        """ % client.getWeightMeasurements()
+        <form action="/new_goal/" method="post">
+            <p><input type=text name=slug></p>
+            <p><input type=text name=title></p>
+            <p><input type=text name=goal_type></p>
+            <p><input type=text name=goalval></p>
+            <p><input type=text name=rate></p>
+            <p><input type=text name=initval>%s</input></p>
+            <p><input type=submit value=Create></p>
+        </form>
+        """ % latest['weight']
     else:
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
