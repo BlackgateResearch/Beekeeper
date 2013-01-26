@@ -12,6 +12,7 @@ from furl import furl
 import requests
 
 app = Flask(__name__)
+app.secret_key = '1A0Zr92138j/3asdfyX R~XHH!jsdfmN]LWX/,?RT~#'
 app.debug = True
 redirect_uri = 'http://beekeeper.herokuapp.com/'
 beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
