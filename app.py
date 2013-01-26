@@ -7,7 +7,7 @@
 
 import os
 
-from flask import Flask, request, session, url_for
+from flask import Flask, request, session, url_for, redirect
 from furl import furl
 import requests
 
@@ -20,6 +20,13 @@ beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 @app.route('/')
 def index():
+    if request.args.get('code', False):
+        return redirect(
+            url_for(
+                'runkeeper',
+                code=request.args['code']
+                )
+            )
     at = request.args.get('access_token', False)
     if at:
         session['beeminder_access_token'] = at
