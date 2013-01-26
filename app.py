@@ -14,7 +14,7 @@ import requests
 app = Flask(__name__)
 app.debug = True
 redirect_uri = 'http://beekeeper.herokuapp.com/'
-beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/?app=beeminder'
+beeminder_redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
 @app.route('/')
@@ -27,7 +27,7 @@ def index():
         args = {
             'client_id': 'caekchatjlsjewirvmeymxzjm',
             'response_type': 'token',
-            'redirect_uri': furl(beeminder_redirect_uri).url
+            'redirect_uri': beeminder_redirect_uri
         }
 
         url = furl('https://www.beeminder.com/apps/authorize').add(args).url
