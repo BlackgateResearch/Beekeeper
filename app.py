@@ -7,7 +7,7 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, request
 from furl import furl
 import requests
 
@@ -29,11 +29,11 @@ def hello():
     return '<a href=%s>Authorise</a>' % url
 
 
-@app.route('/authorise/<value>')
-def show_user_profile(value):
+@app.route('/authorise/')
+def authorise():
     payload = {
         'grant_type': 'authorization_code',
-        'code': 'value2',
+        'code': request.args['code'],
         'client_id': '981b4763b9ba42e888777a0c8d03e02b',
         'client_secret': 'af6d9f6a6c684139b5a86fd6ee64ac31',
         'redirect_uri': redirect_uri
