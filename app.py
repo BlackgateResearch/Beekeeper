@@ -9,7 +9,7 @@ import os
 import json
 import datetime
 
-from flask import Flask, request, session, url_for, redirect
+from flask import Flask, request, session, url_for, redirect, render_template
 from furl import furl
 import requests
 from healthgraph import RunKeeperClient
@@ -57,7 +57,7 @@ def index():
 def new_goal():
     # todo: if no beminder auth_code, blitz the session and redirect to /
     if request.method == 'POST':
-        payload = {
+        '''payload = {
             'slug': request.form['slug'],
             'title': request.form['title'],
             'goal_type': request.form['goal_type'],
@@ -71,8 +71,8 @@ def new_goal():
                 'access_token': session['beeminder_access_token']
             }).add(payload).url,
             data={}
-        )
-        return "response:" + r.text
+        )'''
+        return "posting new goals to beeminder not implimented"
 
     if request.args.get('code', False):
         payload = {
@@ -93,18 +93,14 @@ def new_goal():
             weights,
             key=lambda k: datetime.datetime.strptime(k['timestamp'], "%a, %d %b %Y %H:%M:%S"))[-1]
 
-        return """
-        Welcome
-        <form action="/new_goal/" method="post">
-            <p><input type=text name=slug></p>
-            <p><input type=text name=title></p>
-            <p><input type=text name=goal_type></p>
-            <p><input type=text name=goalval></p>
-            <p><input type=text name=rate></p>
-            <p><input type=text name=initval>%s</input></p>
-            <p><input type=submit value=Create></p>
-        </form>
-        """ % latest['weight']
+        beeminder_url = "https://beeminder.com/api/v1/users/%s/goals.json" % session['beeminder_username']
+        goals = requests.get(
+            furl(beeminder_url).add({
+                'access_token': session['beeminder_access_token']
+            }).url
+        ).json
+        return render_template('select_goal.html', goals=goals)
+
     else:
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
