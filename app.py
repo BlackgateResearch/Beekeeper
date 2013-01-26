@@ -9,9 +9,11 @@ import os
 
 from flask import Flask
 from furl import furl
+import requests
 
 app = Flask(__name__)
 app.debug = True
+redirect_uri = 'http://beekeeper.herokuapp.com/'
 
 
 @app.route('/')
@@ -20,17 +22,24 @@ def hello():
     args = {
         'client_id': '981b4763b9ba42e888777a0c8d03e02b',
         'response_type': 'code',
-        'redirect_uri': 'http://beekeeper.herokuapp.com/'
+        'redirect_uri': redirect_uri
     }
 
     url = furl('https://runkeeper.com/apps/authorize').add(args).url
     return '<a href=%s>Authorise</a>' % url
 
 
-@app.route('/test/<value>')
+@app.route('/authorise/<value>')
 def show_user_profile(value):
-    # show the user profile for that user
-    return 'got %s' % value
+    payload = {
+        'grant_type': 'authorization_code',
+        'code': 'value2',
+        'client_id': '981b4763b9ba42e888777a0c8d03e02b',
+        'client_secret': 'af6d9f6a6c684139b5a86fd6ee64ac31',
+        'redirect_uri': redirect_uri
+    }
+    r = requests.post("https://runkeeper.com/apps/token", data=payload)
+    return r.text
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
