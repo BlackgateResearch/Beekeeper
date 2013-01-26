@@ -6,10 +6,12 @@
 # unlicense.org
 
 import os
+import json
 
 from flask import Flask, request, session, url_for, redirect
 from furl import furl
 import requests
+from healthgraph import RunKeeperClient
 
 app = Flask(__name__)
 app.secret_key = '1A0Zr92138j/3asdfyX R~XHH!jsdfmN]LWX/,?RT~#'
@@ -53,7 +55,15 @@ def new_goal():
             'redirect_uri': runkeeper_redirect_uri
         }
         r = requests.post("https://runkeeper.com/apps/token", data=payload)
-        return r.text
+        session['runkeeper_access_token'] = json.loads(r.text)['access_token']
+
+    if session.get('runkeeper_access_token', False):
+        client = RunKeeperClient(session['runkeeper_access_token'])
+        return """
+        Welcome
+        Here are you existing weights:
+        %s
+        """ % client.getWeightMeasurements()
     else:
         args = {
             'client_id': '981b4763b9ba42e888777a0c8d03e02b',
