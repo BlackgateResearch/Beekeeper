@@ -67,8 +67,6 @@ def new_goal():
         session['linked_goals'] = linked_goals
         return redirect(url_for('index'))
 
-
-
     if request.args.get('code', False):
         payload = {
             'grant_type': 'authorization_code',

@@ -1,6 +1,6 @@
 <h1>Select Goal</h1>
 
-    <form action="/new_goal/" method="post">
+    <form action="/link_goal/" method="post">
         <select name=slug>
             {% for goal in goals %}
             <option value={{goal['slug']}}>{{goal['title']}}</option>
